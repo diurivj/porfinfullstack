@@ -9,6 +9,9 @@ function Home() {
       <Link to="/foods">
         <button>c'all the foods</button>
       </Link>
+      <Link to="/create">
+        <button>create ironfood</button>
+      </Link>
     </div>
   )
 }
