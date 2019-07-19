@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import Swal from 'sweetalert2'
+import FoodEdit from './FoodEdit'
+import useForm from './useForm'
 
 function FoodDetail(props) {
   const [food, setFood] = useState({})
+  const [form, handleInput] = useForm()
   useEffect(() => {
     axios
       .get(`http://localhost:3000/api/foods/${props.match.params.id}`)
@@ -46,6 +49,22 @@ function FoodDetail(props) {
     })
   }
 
+  const updateFood = () => {
+    axios
+      .patch(`http://localhost:3000/api/foods/${props.match.params.id}`, form)
+      .then(({ data }) => {
+        setFood(prevState => {
+          return {
+            ...prevState,
+            ...data.food
+          }
+        })
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
+
   return (
     <div>
       <h2>{food.name}</h2>
@@ -54,6 +73,7 @@ function FoodDetail(props) {
       <p>${food.price}.00</p>
       <button onClick={deleteFood}>Delete</button>
       <button onClick={() => props.history.push('/foods')}>Go back</button>
+      <FoodEdit food={food} handleInput={handleInput} updateFood={updateFood} />
     </div>
   )
 }
